@@ -65,6 +65,39 @@ buttons.forEach(button => {
       display.textContent = Math.round(result * 100) / 100;
       num1 = display.textContent;
       resetScreen = true;
+    } else if (!isNaN(button.textContent) || button.textContent === '.') {
+        if (display.textContent === '0' || resetScreen) {
+          display.textContent = button.textContent === '.' ? '0.' : button.textContent;
+          resetScreen = false;
+      } else {
+          // Prevent multiple decimal points
+          if (button.textContent === '.' && display.textContent.includes('.')) {
+              return;
+          }
+          display.textContent += button.textContent;
+      }
+    } else if (['+', '-', '*', '/'].includes(button.textContent)) {
+      if (num1 === null) {
+        num1 = display.textContent;
+      } else if (operator !== null) {
+        num2 = display.textContent;
+        const result = operate(operator, num1, num2);
+        display.textContent = Math.round(result * 100) / 100;
+        num1= display.textContent;
+        num2 = null;
+      }
+      operator = button.textContent;
+      resetScreen = true;
+    } else if (button.textContent === '=') {
+      if (num1 !== null && operator !== null) {
+        num2 = display.textContent;
+        const result = operate(operator, num1, num2);
+        display.textContent = Math.round(result * 100) / 100;
+        num1 = display.textContent;
+        operator = null;
+        num2 = null;
+        resetScreen = true;
+      }
     }
   })
 })
